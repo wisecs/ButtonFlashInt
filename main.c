@@ -7,6 +7,8 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
+#include <stdbool.h>
 
 int checkButtons();
 void delay(int ms);
@@ -15,6 +17,8 @@ void delay(int ms);
 #define CYCLE_STATE 1
 #define FLASH_STATE 2
 
+volatile bool button0Pressed = false;
+volatile bool button1Pressed = false;
 int state = OFF_STATE;
 
 int curr6 = 1;
@@ -25,6 +29,7 @@ int prev7 = 1;
 
 int main(void)
 {
+	//Change input to PORTK0 A8; PORTK1 A9
 	DDRF &= ~0xC0; //Setting pin 6 and 7 for input
 	PORTF |= 0xC0; //Setting pin 6 and 7 to idle at high voltage
 	PORTF &= ~0x0F; //LEDs off

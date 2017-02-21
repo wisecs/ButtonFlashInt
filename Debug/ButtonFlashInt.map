@@ -14,6 +14,10 @@ Discarded input sections
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
+ .bss.button1Pressed
+                0x00000000        0x1 main.o
+ .bss.button0Pressed
+                0x00000000        0x1 main.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.9.2/avr6\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.9.2/avr6\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.9.2/avr6\libgcc.a(_exit.o)
@@ -446,15 +450,15 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0xe01
+.debug_info     0x00000000      0xe31
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.1.130/gcc/dev/atmega2560/avr6/crtatmega2560.o
- .debug_info    0x00000bbc      0x245 main.o
+ .debug_info    0x00000bbc      0x275 main.o
 
-.debug_abbrev   0x00000000      0xc6d
+.debug_abbrev   0x00000000      0xc74
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0xb1a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.1.130/gcc/dev/atmega2560/avr6/crtatmega2560.o
- .debug_abbrev  0x00000b1a      0x153 main.o
+ .debug_abbrev  0x00000b1a      0x15a main.o
 
 .debug_line     0x00000000      0x448
  *(.debug_line .debug_line.* .debug_line_end)
@@ -465,11 +469,11 @@ END GROUP
  *(.debug_frame)
  .debug_frame   0x00000000       0x58 main.o
 
-.debug_str      0x00000000      0x5a5
+.debug_str      0x00000000      0x5c9
  *(.debug_str)
  .debug_str     0x00000000      0x3e6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.1.130/gcc/dev/atmega2560/avr6/crtatmega2560.o
- .debug_str     0x000003e6      0x1bf main.o
-                                0x1f3 (size before relaxing)
+ .debug_str     0x000003e6      0x1e3 main.o
+                                0x217 (size before relaxing)
 
 .debug_loc      0x00000000      0x1a2
  *(.debug_loc)
