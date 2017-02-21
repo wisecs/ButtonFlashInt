@@ -5,6 +5,8 @@
  * Author : Carter W, Drake S
  */ 
 
+// Use sei() and cli() to set and clear interrupt status
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -12,6 +14,8 @@
 
 int checkButtons();
 void delay(int ms);
+void cycle();
+void flash();
 
 #define OFF_STATE 0
 #define CYCLE_STATE 1
@@ -30,9 +34,12 @@ int prev7 = 1;
 int main(void)
 {
 	//Change input to PORTK0 A8; PORTK1 A9
-	DDRF &= ~0xC0; //Setting pin 6 and 7 for input
-	PORTF |= 0xC0; //Setting pin 6 and 7 to idle at high voltage
+	DDRK &= ~0x03; //Setting pin 0 and 1 for input
+	PORTK |= 0x03; //Setting pin 0 and 1 to idle at high voltage
 	PORTF &= ~0x0F; //LEDs off
+	
+	PCICR |= 0x04;	//Enabling PCIE2 to accept interrupts
+	PCMSK2 |= 0x03; //Specifically enabling PCINT16 and 17s
 	
 	int light_index = 0;
 	
@@ -108,3 +115,42 @@ int checkButtons() {
 	return buttonPress;
 }
 
+void cycle()
+{
+	
+}
+
+void flash()
+{
+	
+}
+
+// Cycle interrupt
+ISR(PCINT16_vect)
+{
+	// turn off interrupts
+	// check pin value
+	// wait x time?
+	// double-check pin
+	// if(pin == 1)
+	//		turn off LEDs
+	//		if(state == cycle)
+	//			go to off state
+	//		else
+	//			go to cycle state
+}
+
+// Flashing interrupt
+ISR(PCINT17_vect)
+{
+	// turn off interrupt
+	// check pin value
+	// wait x time?
+	// double-check pin
+	// if(pin == 1)
+	//		turn off LEDs
+	//		if(state == flashing)
+	//			go to off
+	//		else
+	//			go to flashing
+}
