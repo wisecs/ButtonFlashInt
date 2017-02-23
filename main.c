@@ -21,7 +21,9 @@ void delay_usec(unsigned int us);
 #define FLASH_STATE 2
 
 volatile bool button0Pressed = false;
+volatile bool button0Released = false;
 volatile bool button1Pressed = false;
+volatile bool button1Released = false;
 
 int state = OFF_STATE;
 
@@ -85,8 +87,8 @@ int checkButtons() {
 	int buttonPress = 0;
 	
 	//Button 0 has been pressed
-	if(button0Pressed) {
-		button0Pressed = false;
+	if(button0Released) {
+		button0Released = false;
 		if(state == CYCLE_STATE)
 			state = OFF_STATE;
 		else
@@ -94,8 +96,8 @@ int checkButtons() {
 		buttonPress = 1;
 	}
 	//Button 1 has been pressed
-	if(button1Pressed) {
-		button1Pressed = false;
+	if(button1Released) {
+		button1Released = false;
 		if(state == FLASH_STATE)
 			state = OFF_STATE;
 		else
@@ -110,20 +112,26 @@ int checkButtons() {
 ISR(PCINT2_vect)
 {
 	cli();
+	
 	// Cycle interrupt
 	if(0x01 & PINK)	{ //Checking that PORTK pin0 is high, meaning button has been released
 		delay_usec(110);
-		if(button0Pressed && (0x01 & PINK))
-			button0Pressed = true;
+		if(button0Pressed && (0x01 & PINK)) {
+			button0Released = true;
+			button0Pressed = false;
+		}
 	} else //pin is low, button has been pressed
 		button0Pressed = true;
 		
 	// Flashing interrupt
 	if(0x02 & PINK)	{ //Checking that PORTK pin0 is high, meaning button has been released
 		delay_usec(110);
-		if(button1Pressed && (0x02 & PINK))
-			button1Pressed = true;
+		if(button1Pressed && (0x02 & PINK)) {
+			button1Released = true;
+			button1Pressed = false;
+		}
 	} else //pin is low, button has been pressed
 		button1Pressed = true;
+		
 	sei();
 }
