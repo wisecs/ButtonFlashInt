@@ -14,8 +14,7 @@
 
 int checkButtons();
 void delay(int ms);
-void cycle();
-void flash();
+void delay_usec(unsigned int us);
 
 #define OFF_STATE 0
 #define CYCLE_STATE 1
@@ -23,13 +22,8 @@ void flash();
 
 volatile bool button0Pressed = false;
 volatile bool button1Pressed = false;
+
 int state = OFF_STATE;
-
-int curr6 = 1;
-int prev6 = 1;
-
-int curr7 = 1;
-int prev7 = 1; 
 
 int main(void)
 {
@@ -43,8 +37,9 @@ int main(void)
 	
 	int light_index = 0;
 	
-    while (1)
-    {
+	while (1)
+	{
+		sei();
 		//Flashing State
 		if(state == FLASH_STATE) {
 			//Lights are off
@@ -52,7 +47,7 @@ int main(void)
 				PORTF |= 0x0F;
 				light_index = 1;
 				delay(200);
-			} 
+			}
 			//Lights are on
 			else {
 				PORTF &= ~0x0F;
@@ -66,14 +61,14 @@ int main(void)
 			light_index = (light_index + 1) % 4;
 			PORTF |= (1 << light_index);
 			delay(1000);
-		} 
+		}
 		//Off State
 		else if(state == OFF_STATE) {
 			PORTF &= ~0x0F;
 			light_index = 0;
 			checkButtons();
 		}
-    }
+	}
 }
 
 //Break out needed
@@ -90,7 +85,8 @@ int checkButtons() {
 	int buttonPress = 0;
 	
 	//Button 0 has been pressed
-	if(curr6 && !prev6) {
+	if(button0Pressed) {
+		button0Pressed = false;
 		if(state == CYCLE_STATE)
 			state = OFF_STATE;
 		else
@@ -98,7 +94,8 @@ int checkButtons() {
 		buttonPress = 1;
 	}
 	//Button 1 has been pressed
-	if(curr7 && !prev7) {
+	if(button1Pressed) {
+		button1Pressed = false;
 		if(state == FLASH_STATE)
 			state = OFF_STATE;
 		else
@@ -106,51 +103,27 @@ int checkButtons() {
 		buttonPress = 1;
 	}
 	
-	prev6 = curr6;
-	curr6 = 0x40 & PINF; //0100 0000
-	
-	prev7 = curr7;
-	curr7 = 0x80 & PINF; //1000 0000
-	
 	return buttonPress;
 }
 
-void cycle()
-{
-	
-}
 
-void flash()
+ISR(PCINT2_vect)
 {
-	
-}
-
-// Cycle interrupt
-ISR(PCINT16_vect)
-{
-	// turn off interrupts
-	// check pin value
-	// wait x time?
-	// double-check pin
-	// if(pin == 1)
-	//		turn off LEDs
-	//		if(state == cycle)
-	//			go to off state
-	//		else
-	//			go to cycle state
-}
-
-// Flashing interrupt
-ISR(PCINT17_vect)
-{
-	// turn off interrupt
-	// check pin value
-	// wait x time?
-	// double-check pin
-	// if(pin == 1)
-	//		turn off LEDs
-	//		if(state == flashing)
-	//			go to off
-	//		else
-	//			go to flashing
+	cli();
+	// Cycle interrupt
+	if(0x01 & PINK)	{ //Checking that PORTK pin0 is high, meaning button has been released
+		delay_usec(110);
+		if(button0Pressed && (0x01 & PINK))
+			button0Pressed = true;
+	} else //pin is low, button has been pressed
+		button0Pressed = true;
+		
+	// Flashing interrupt
+	if(0x02 & PINK)	{ //Checking that PORTK pin0 is high, meaning button has been released
+		delay_usec(110);
+		if(button1Pressed && (0x02 & PINK))
+			button1Pressed = true;
+	} else //pin is low, button has been pressed
+		button1Pressed = true;
+	sei();
 }

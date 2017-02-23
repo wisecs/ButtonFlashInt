@@ -40,22 +40,27 @@ C_SRCS +=  \
 ../main.c
 
 
-PREPROCESSING_SRCS += 
+PREPROCESSING_SRCS +=  \
+../delay_usec.s
 
 
 ASM_SRCS += 
 
 
 OBJS +=  \
+delay_usec.o \
 main.o
 
 OBJS_AS_ARGS +=  \
+delay_usec.o \
 main.o
 
 C_DEPS +=  \
+delay_usec.d \
 main.d
 
 C_DEPS_AS_ARGS +=  \
+delay_usec.d \
 main.d
 
 OUTPUT_FILE_PATH +=ButtonFlashInt.elf
@@ -89,6 +94,20 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU Assembler
+./delay_usec.o: .././delay_usec.s
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU Assembler : 4.9.2
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -Wa,-gdwarf2 -x assembler-with-cpp -c -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega2560" -I "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\include"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -mrelax -Wa,-g   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+
+./%.o: .././%.s
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU Assembler : 4.9.2
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -Wa,-gdwarf2 -x assembler-with-cpp -c -mmcu=atmega2560 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\gcc\dev\atmega2560" -I "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.1.130\include"  -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -mrelax -Wa,-g   -o "$@" "$<" 
+	@echo Finished building: $<
+	
 
 
 
